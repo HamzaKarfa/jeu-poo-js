@@ -1,262 +1,326 @@
 
 
 
-let coupJoué = 0
+"use strict"
 
-class Joueurs {
+export class Joueurs {
     constructor(name, color){
+        //Propriété du joueur
         this.name = name
         this.color = color
- 
+
+        //Propriété du Gameplay 
+        this.coupJoué = 0
+        this.whoPlaying
+
+        //Condition de victoire 
+            this.tableau = []
+
+            //Compteur
+            this.counterHorizontale
+            this.counterVerticale
+            this.counterDiagonalDroite
+            this.counterDiagonalGauche
+            //Cases
+            this.bottomCase
+            this.caseSuivante
+            this.div
+            //Colonnes
+            this.colonnePrecedente
+            this.colonneSuivante 
+            this.ColonneNumber
+            this.columnBefore
+            this.columnAfter
+            this.column
+            this.columns
+            this.ColonneNumber
+            this.columnBefore
+            this.columnAfter 
+            //Colonne+Case
+            this.cadreSuivant
+            
+    }
+
+    //-----GETTERS-----//
+    getName(){
+        return this.name
     }
     getColor(){
         return this.color
     }
-    getName(){
-        return this.name
+    getCoupJoué(){
+        return this.coupJoué
     }
+    getWhoPlaying(){
+        this.whoPlaying = document.querySelector('#tours')
+        return this.whoPlaying
+    }
+    //-----SETTERS-----//
+    setCoupJoué(){
+        return this.coupJoué +=1
+    } 
+    //----METHOD GAME----//
 
     play(column){
+
         
+        this.column = column
+        this.columns = column.parentNode.children
 //-----------EMPILEMENT DES JETONS---------//
         for (let j = 6; j >= 0; j--) {
-            let div = column.querySelector('[data-case="'+j+'"]')
-            if (div == undefined) {
+            this.div = this.column.querySelector('[data-case="'+j+'"]')
+            if (this.div == undefined) {
                 console.log ("Impossible dajouter un jeton ici => Colonne Pleine")
                 break;
-            }else if (div !==undefined && div.classList.contains('red') || div.classList.contains('yellow')) {
+            }else if (this.div !==undefined && this.div.classList.contains('red') || this.div.classList.contains('yellow')) {
               
             }else{
-                this.addJeton(div,column)
+                this.addJeton()
                 break;
             }
         }
     }
-    addJeton(div,column){
+    addJeton(){
         
-        coupJoué++
-        document.querySelector('.bonus').innerHTML ='<h4>'+'Nombre de coups joué = '+coupJoué
-        if (this.name == 'Joueur1') {
+        this.setCoupJoué()
+        document.querySelector('.bonus').innerHTML ='<h4>'+'Nombre de coups joué du ' + this.getName() +  ' = '+this.getCoupJoué()
+        if (this.name == 'Joueur 1') {
             this.changeWhoPlaying()
-            div.classList.add(this.getColor())
-            this.isWin(div,column); 
+            this.div.classList.add(this.getColor())
+            this.isWin(); 
         }else{
             this.changeWhoPlaying()
-            div.classList.add(this.getColor())
-            this.isWin(div,column); 
+            this.div.classList.add(this.getColor())
+            this.isWin(); 
         }
         
     }
     changeWhoPlaying(){
-        whoPlaying = document.querySelector('#tours')
-        switch (whoPlaying.textContent) {
-            case  'Joueur1':
-                    whoPlaying.innerHTML = 'Joueur2'
+        this.getWhoPlaying()
+        switch (this.whoPlaying.textContent) {
+            case  'Joueur 1':
+                    this.whoPlaying.innerHTML = 'Joueur 2'
                 break;
-            case  'Joueur2':
-                    whoPlaying.innerHTML = 'Joueur1'
+            case  'Joueur 2':
+                    this.whoPlaying.innerHTML = 'Joueur 1'
                 break;
         }
-        return whoPlaying
+        return this.whoPlaying
     }
-    isWin(lastSetDiv,column){
-
-        this.horizontal(lastSetDiv,column)
-        this.vertical(lastSetDiv,columns)
-        this.diagonal(lastSetDiv,columns)
+    isWin(){
+        this.horizontal()
+        this.vertical()
+        this.diagonal()
     }
 
-    horizontal(div,column){
+    vertical(){
         
-        let counterHorizontal = 1
-        let tableau = []
-        let bottomCase = column.children[div.getAttribute('data-case')]
-        let caseSuivante = 0
-        tableau.push(div)
+        this.initVertical()
 
     //METHOD AVEC WHILE
-        while (bottomCase !== undefined && bottomCase.classList.contains(this.getColor())){
-            
-            caseSuivante++
-            tableau.push(bottomCase)
-            bottomCase = column.children[+div.getAttribute('data-case')+(+caseSuivante)]
-            counterHorizontal ++
-        }
-    //counterHorizontal  FIN DE GAME
-        if (counterHorizontal >= 4) {
-            tableau.forEach(table => {
+    this.verticalBas()
+    //counterVerticale  FIN DE GAME
+        this.verticalCounter()
+
+    }
+    initVertical(){
+        this.counterVerticale = 1
+        this.tableau = []
+        this.bottomCase = this.column.children[this.div.getAttribute('data-case')]
+        this.caseSuivante = 0
+        this.tableau.push(this.div)
+
+    }
+    verticalCounter(){
+        //counterVerticale  FIN DE GAME
+        if (this.counterVerticale >= 4) {
+            this.tableau.forEach(table => {
                table.classList.add('borderWin') 
             });
             console.log('win : '+ this.getName() +' color ' + this.getColor())
-            document.querySelector('H2').innerHTML = this.getName() + ' A Remporté la partie en horizontale'
+            document.querySelector('H2').innerHTML = this.getName() + ' A Remporté la partie en Verticale'
+            document.querySelector('H1').innerHTML += '<br> <button class="btn btn-secondary justify-content-center" onclick="document.location.reload(true);">Rejoué</button>'
         
         }
-
     }
-    vertical(div,columns){
-
-        let tableau = []
-        tableau.push(div)
-
-        let counterVertical = 1
-
-        let colonnePrecedente = 1
-        let colonneSuivante = 1
-
-        let ColonneNumber = (div.parentNode.getAttribute('data-col')-1)
-
-        let columnBefore = columns[ColonneNumber-colonnePrecedente]
-        let columnAfter = columns[(ColonneNumber)+colonneSuivante]
-
-
-    //METHOD WHILE SUITE A GAUCHE 
-        while (columnBefore !== undefined && columnBefore.children[div.getAttribute('data-case')-1].classList.contains(this.getColor())){
-                counterVertical++
-                colonnePrecedente+=1
-                tableau.push(columnBefore.children[div.getAttribute('data-case')-1])
-                columnBefore = columns[ColonneNumber-colonnePrecedente]
-        }
-    //METHOD WHILE SUITE A DROITE
-        while (columnAfter !== undefined && columnAfter.children[div.getAttribute('data-case')-1].classList.contains(this.getColor())){
-            counterVertical++
-            colonneSuivante+=1
-            tableau.push(columnAfter.children[div.getAttribute('data-case')-1])
-            columnAfter = columns[(div.parentNode.getAttribute('data-col')-1)+colonneSuivante]
-        }   
-
-    //counterVertical  FIN DE GAME
-        if (counterVertical >= 4) {
-            tableau.forEach(table => {table.classList.add('borderWin')});
+    verticalBas(){
+            //METHOD AVEC WHILE
+            while (this.bottomCase !== undefined && this.bottomCase.classList.contains(this.getColor())){
             
-            console.log('win : '+ this.getName() +' color ' + this.getColor())
-            document.querySelector('H2').innerHTML = this.getName() + ' A Remporté la partie en vertical'
-        }  
+                this.caseSuivante++
+                this.tableau.push(this.bottomCase)
+                this.bottomCase = this.column.children[+this.div.getAttribute('data-case')+(+this.caseSuivante)]
+                this.counterVerticale ++
+            }
     }
+    horizontal(){
+    
+    //Initialisation des propriétés Avant la condition 
+        this.initHorizontalContition()
+    //METHOD WHILE SUITE A GAUCHE 
+        this.horizontalGauche()
+    //METHOD WHILE SUITE A DROITE
+        this.horizontalDroite()
+    //counterVertical  FIN DE GAME
+        this.counterHorizontal() 
+    }
+    diagonal(){
 
-    diagonal(div,columns){
-
-        let tableau = []
-        tableau.push(div)
-
-        let counterDiagonal = 1
-
-        let colonnePrecedente = 1
-        let colonneSuivante = 1
-
-        let ColonneNumber = (div.parentNode.getAttribute('data-col')-1)
-
-        let cadreSuivant = 2
-        let columnBefore = columns[ColonneNumber-colonnePrecedente]
-        let columnAfter = columns[(ColonneNumber)+colonneSuivante]
-
-
-    //METHOD WHILE SUITE HAUTE GAUCHE 
-        while ( columnBefore !== undefined && 
-                columnBefore.children[div.getAttribute('data-case')-cadreSuivant] !== undefined && 
-                columnBefore.children[div.getAttribute('data-case')-cadreSuivant].classList.contains(this.getColor()) )
-        {
-            tableau.push(columnBefore.children[div.getAttribute('data-case')-cadreSuivant])
-                    
-                    colonnePrecedente+=1
-                    cadreSuivant++
-                    columnBefore = columns[ColonneNumber-colonnePrecedente]
-                    counterDiagonal++
-        }    
-
-    //METHOD WHILE SUITE HAUTE DROITE
-        while ( columnAfter !== undefined && 
-                columnAfter.children[div.getAttribute('data-case')-cadreSuivant] !== undefined &&
-                columnAfter.children[div.getAttribute('data-case')-cadreSuivant].classList.contains(this.getColor()))
-        {
-            tableau.push(columnAfter.children[div.getAttribute('data-case')-cadreSuivant])
-                    
-                    colonneSuivante+=1
-                    cadreSuivant ++
-                    columnAfter = columns[ColonneNumber+colonneSuivante]
-                    counterDiagonal++
-        }   
-
-    //-----------------------------------------------------------------------------------------------------//
-
-        cadreSuivant = 0
-
-
-    //METHOD WHILE SUITE BAS GAUCHE 
-        while ( columnBefore !== undefined && 
-                columnBefore.children[div.getAttribute('data-case')-cadreSuivant] !== undefined && 
-                columnBefore.children[div.getAttribute('data-case')-cadreSuivant].classList.contains(this.getColor()) )
-        {
-            tableau.push(columnBefore.children[div.getAttribute('data-case')-cadreSuivant])
+        //Initialisation des propriétés Avant la condition 
+            this.initDiagCondition();
+    
+        //METHOD WHILE SUITE HAUTE GAUCHE 
+        
+            this.diagHautGauche()
+            
+        //METHOD WHILE SUITE BAS GAUCHE 
+        
+            this.diagBasGauche()
+    
+        //METHOD WHILE SUITE HAUTE DROITE
+    
+            this.diagHautDroite()
+    
+        //METHOD WHILE SUITE BAS DROITE
+    
+            this.diagBasDroite()
+    
+        //counterDiagonal  FIN DE GAME
+    
+            this.diagCounter();
+    }
+    initHorizontalContition(){
+        this.tableau.push(this.div)
+        //Compteur
+        this.counterHorizontale = 1
+        //Colonnes
+        this.colonnePrecedente = 1
+        this.colonneSuivante = 1
+        this.ColonneNumber = (this.div.parentNode.getAttribute('data-col')-1)
+        this.columnBefore = this.columns[this.ColonneNumber-this.colonnePrecedente]
+        this.columnAfter = this.columns[(this.ColonneNumber)+this.colonneSuivante]
+    }
+    horizontalGauche(){
+        
+        //METHOD WHILE SUITE A GAUCHE 
+        while (this.columnBefore !== undefined && this.columnBefore.children[this.div.getAttribute('data-case')-1].classList.contains(this.getColor())){
+            this.counterHorizontale++
+            this.colonnePrecedente+=1
+            this.tableau.push(this.columnBefore.children[this.div.getAttribute('data-case')-1])
+            this.columnBefore = this.columns[this.ColonneNumber-this.colonnePrecedente]
+        }
+    }
+    counterHorizontal(){
+            //counterVertical  FIN DE GAME
+            if (this.counterHorizontale >= 4) {
+                this.tableau.forEach(table => {table.classList.add('borderWin')});
                 
-                    colonnePrecedente+=1
-                    cadreSuivant--
-                    columnBefore = columns[ColonneNumber-colonnePrecedente]
-                    counterDiagonal++
-        }    
+                console.log('win : '+ this.getName() +' color ' + this.getColor())
+                document.querySelector('H2').innerHTML = this.getName() + ' A Remporté la partie en horizontale'
+            }  
+    }
+    horizontalDroite(){
+        //METHOD WHILE SUITE A DROITE
+        while (this.columnAfter !== undefined && this.columnAfter.children[this.div.getAttribute('data-case')-1].classList.contains(this.getColor())){
+            this.counterHorizontale++
+            this.colonneSuivante+=1
+            this.tableau.push(this.columnAfter.children[this.div.getAttribute('data-case')-1])
+            this.columnAfter = this.columns[(this.div.parentNode.getAttribute('data-col')-1)+this.colonneSuivante]
+        }   
+    }
+    
+    initDiagCondition(){
+        this.tableau = []
+        this.tableau.push(this.div)
+        //Compteur
+        this.counterDiagonalDroite = 1
+        this.counterDiagonalGauche = 1
+        //Colonnes
+        this.colonnePrecedente = 1
+        this.colonneSuivante = 1
+        this.ColonneNumber = (this.div.parentNode.getAttribute('data-col')-1)
+        this.columnBefore = this.columns[this.ColonneNumber - this.colonnePrecedente]
+        this.columnAfter = this.columns[(this.ColonneNumber) + this.colonneSuivante]
+    }
+    diagHautGauche(){
 
-    //METHOD WHILE SUITE BAS DROITE
-        while ( columnAfter !== undefined && 
-                columnAfter.children[div.getAttribute('data-case')-cadreSuivant] !== undefined &&
-                columnAfter.children[div.getAttribute('data-case')-cadreSuivant].classList.contains(this.getColor()))
+        //METHOD WHILE SUITE HAUTE GAUCHE 
+        this.cadreSuivant = 2
+        while ( this.columnBefore !== undefined && 
+                this.columnBefore.children[this.div.getAttribute('data-case') - this.cadreSuivant] !== undefined && 
+                this.columnBefore.children[this.div.getAttribute('data-case') - this.cadreSuivant].classList.contains(this.getColor()) )
+        {
+            this.tableau.push(this.columnBefore.children[this.div.getAttribute('data-case')-this.cadreSuivant])
+                    
+                    this.colonnePrecedente+=1
+                    this.cadreSuivant++
+                    this.columnBefore = this.columns[this.ColonneNumber - this.colonnePrecedente]
+                    this.counterDiagonalGauche++
+                    
+
+        }
+    }
+    diagBasDroite(){
+
+        //METHOD WHILE SUITE BAS DROITE
+        this.cadreSuivant = 0
+        while ( this.columnAfter !== undefined && 
+                this.columnAfter.children[this.div.getAttribute('data-case') - this.cadreSuivant] !== undefined &&
+                this.columnAfter.children[this.div.getAttribute('data-case') - this.cadreSuivant].classList.contains(this.getColor()))
         {
         
-            tableau.push(columnAfter.children[div.getAttribute('data-case')-cadreSuivant])
+            this.tableau.push(this.columnAfter.children[this.div.getAttribute('data-case')-this.cadreSuivant])
 
-                    colonneSuivante+=1
-                    cadreSuivant --
-                    columnAfter = columns[ColonneNumber+colonneSuivante]
-                    counterDiagonal++
-} 
+                    this.colonneSuivante+=1
+                    this.cadreSuivant --
+                    this.columnAfter = this.columns[this.ColonneNumber + this.colonneSuivante]
+                    this.counterDiagonalGauche++
+                    
+
+        }
+    }
+    diagHautDroite(){
 
 
-//-----------------------------------------------------------------------------------------------------//
+        //METHOD WHILE SUITE HAUTE DROITE
 
-    //counterDiagonal  FIN DE GAME
+        this.cadreSuivant = 2   
+        while ( this.columnAfter !== undefined && 
+                this.columnAfter.children[this.div.getAttribute('data-case') - this.cadreSuivant] !== undefined &&
+                this.columnAfter.children[this.div.getAttribute('data-case') - this.cadreSuivant].classList.contains(this.getColor()))
+        {
+            this.tableau.push(this.columnAfter.children[this.div.getAttribute('data-case')-this.cadreSuivant])
+                    
+                    this.colonneSuivante+=1
+                    this.cadreSuivant ++
+                    this.columnAfter = this.columns[this.ColonneNumber+this.colonneSuivante]
+                    this.counterDiagonalDroite++
+                    
+        }
+    }
+    diagBasGauche(){
+        //METHOD WHILE SUITE BAS GAUCHE
+        this.cadreSuivant = 0
+        while ( this.columnBefore !== undefined && 
+            this.columnBefore.children[this.div.getAttribute('data-case') - this.cadreSuivant] !== undefined && 
+            this.columnBefore.children[this.div.getAttribute('data-case') - this.cadreSuivant].classList.contains(this.getColor()) )
+        {
+            this.tableau.push(this.columnBefore.children[this.div.getAttribute('data-case')-this.cadreSuivant])
 
-        if (counterDiagonal >= 4) {
-            tableau.forEach(table => {table.classList.add('borderWin')});
+                    this.colonnePrecedente+=1
+                    this.cadreSuivant--
+                    this.columnBefore = this.columns[this.ColonneNumber - this.colonnePrecedente]
+                    this.counterDiagonalDroite++
+
+
+        }
+    }
+    diagCounter(){
+        if (this.counterDiagonalGauche >= 4 ||  this.counterDiagonalDroite >= 4 ) {
+            this.tableau.forEach(table => {table.classList.add('borderWin')});
             console.log('win : '+ this.getName() +' color ' + this.getColor())
             document.querySelector('H2').innerHTML = this.getName() + ' A Remporté la partie en diagonale'
         }  
     }
 }
- //Instance des joueurs
- Joueur1 = new Joueurs("Joueur1","red");
- Joueur2 = new Joueurs("Joueur2","yellow");
-
-
-//Tour par Tour initialisation début de game 
-whoPlaying = document.querySelector('#tours')
-if (whoPlaying.content === undefined) {
-
-    initWhoPlaying();
-}
-
-
-
-
- //Click d'une colonne déclanche le Tour du joueur
-     columns = document.querySelectorAll('#columns')
-      columns.forEach(column => {
-  
-         column.addEventListener('click',function(e){
-             whoPlaying = document.querySelector('#tours')
-             switch (whoPlaying.textContent) {
-                 case  'Joueur1':
-                         Joueur1.play(column);
-                     
-                     break;
-                 case  'Joueur2':
-                  
-                         Joueur2.play(column);
-                     break;
-             }
-         })
-     });
- function initWhoPlaying(){
-     whoPlaying = document.getElementById('tours')
-     whoPlaying.innerHTML = 'Joueur1'
- return 
-  
- }
-
+ 

@@ -42,9 +42,24 @@ transition-duration: 0.5s;
 border: solid 3px white;
 }
 .red{
+  animation-name: 'pion';
+  animation-delay: 1s;
 transition-duration: 0.3s;
 }
 .yellow{
+  animation-name: pion;
+
 transition-duration: 0.3s;
 
+}
+@keyframes pion {
+  from {
+    margin-bottom: 100px;
+    
+  }
+
+  to {
+    margin-bottom: 0%;
+ 
+  }
 }

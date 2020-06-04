@@ -46,13 +46,13 @@ SI le compteur = 4
 FIN TANT QUE 
 FIN DE LA GAME
 
-//Suite Verticale 
+//Suite horizontale 
 
 Récupérer le dernier pion joué  
 Pos = Récupérer La position
 Récupérer  la colonne du dernier pion joué 
 
-//-----Verticale Gauche
+//-----horizontale Gauche
 
 TANT QUE la colonne -1 existe et que le pion à la position équivalente à POS existe : 
     SI Le pion à la même couleur que le dernier pion posé
@@ -62,7 +62,7 @@ FIN TANTQUE
 
 
 
-//-----Verticale Droite
+//-----horizontale Droite
 
 TANT QUE la colonne +1 existe et que le pion à la position équivalente à POS existe : 
     SI Le pion à la même couleur que le dernier pion posé
@@ -119,3 +119,5 @@ Si compteur = 4
     - Arrêter le jeu
 
 
+Compteur Diagonal Droite = Bas Gauche + haut Droite
+Compteur Diagonal Gauche = Bas Droite + haut Gauche
