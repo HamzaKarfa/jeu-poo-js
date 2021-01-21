@@ -3,7 +3,7 @@
 
 http://hk-puissance-4-poo-js.projets.simplon-roanne.com
 
-Jeu puissance 4 : 
+## Jeu puissance 4 : 
 
 
 Class Joueurs (Utilisateurs)
@@ -12,7 +12,7 @@ Class Joueurs (Utilisateurs)
 
 
 
-//Règle pour le GAMEPLAY
+## Règle pour le GAMEPLAY
 
 
 Le joueur click sur une colonne
@@ -31,11 +31,11 @@ SINON
 FINSI 
 
 
-//Condition de VICTOIRE 
+## Condition de VICTOIRE 
 
 
 
-//Suite horizontale
+### Suite Verticale
 
 A = Récupérer le dernier pion jouer
 
@@ -47,13 +47,13 @@ SI le compteur = 4
 FIN TANT QUE 
 FIN DE LA GAME
 
-//Suite horizontale 
+### Suite horizontale 
 
 Récupérer le dernier pion joué  
 Pos = Récupérer La position
 Récupérer  la colonne du dernier pion joué 
 
-//-----horizontale Gauche
+#### horizontale Gauche
 
 TANT QUE la colonne -1 existe et que le pion à la position équivalente à POS existe : 
     SI Le pion à la même couleur que le dernier pion posé
@@ -63,7 +63,7 @@ FIN TANTQUE
 
 
 
-//-----horizontale Droite
+#### horizontale Droite
 
 TANT QUE la colonne +1 existe et que le pion à la position équivalente à POS existe : 
     SI Le pion à la même couleur que le dernier pion posé
@@ -77,35 +77,35 @@ FIN TANTQUE
 
 
 
-//Suite diagonale
+### Suite diagonale
 
 Récupérer le dernier pion joué  
 Pos = Récupérer La position
 Récupérer  la colonne du dernier pion joué 
 
 
-//-----Diagonale haute Gauche 
+#### Diagonale haute Gauche 
 
 TANT QUE la colonne -1 existe et que le pion à la position -1 à POS existe et que le pion à la même couleur que le dernier pion posé: 
             compteur ++
 
 FIN TANTQUE
 
-//-----Diagonale haute Droite
+#### Diagonale haute Droite
 
 TANT QUE la colonne +1 existe et que le pion à la position -1 à POS existe et que le pion à la même couleur que le dernier pion posé: 
             compteur ++
 
 FIN TANTQUE
 
-//-----Diagonale Basse Gauche 
+#### Diagonale Basse Gauche 
 
 TANT QUE la colonne -1 existe et que le pion à la position +1 à POS existe et que le pion à la même couleur que le dernier pion posé: 
             compteur ++
 
 FIN TANTQUE
 
-//-----Diagonale Basse Droite
+#### Diagonale Basse Droite
 
 TANT QUE la colonne +1 existe et que le pion à la position +1 à POS existe et que le pion a la même couleur que le dernier pion posé: 
             compteur ++
